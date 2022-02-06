@@ -6,7 +6,7 @@ services:
     ports:
       - 27017:27017
   booking_api_service:
-    platform: linux/amd64
+#    platform: linux/amd64
     build: .
     restart: always
     ports:
