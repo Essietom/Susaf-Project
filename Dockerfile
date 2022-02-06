@@ -1,5 +1,6 @@
 FROM adoptopenjdk/openjdk11-openj9:latest
-RUN mkdir /opt/app
-COPY culturalHeritage-1.jar /opt/app
+ARG JAR_FILE=culturalHeritage-1.jar
+WORKDIR /opt/app
+COPY ${JAR_FILE} app.jar
 EXPOSE 8080
-CMD ["java", "-jar", "opt/app/culturalHeritage-1.jar"]
+CMD ["java", "-jar", "app.jar"]
