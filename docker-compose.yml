@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  booking_api_database:
+    image: mongo:4.4.3
+    restart: always
+    ports:
+      - 27017:27017
+  booking_api_service:
+    platform: linux/amd64
+    build: .
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - booking_api_database

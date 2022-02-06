@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.univaq</groupId>
 	<artifactId>culturalHeritage</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1</version>
 	<name>culturalHeritage</name>
 	<description>Museum Management</description>
 	<properties>
