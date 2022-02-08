@@ -2,12 +2,17 @@ package com.univaq.culturalHeritage.controller;
 
 import com.univaq.culturalHeritage.dao.BookingDao;
 import com.univaq.culturalHeritage.dao.UserBooking;
+import com.univaq.culturalHeritage.exception.NotFoundException;
 import com.univaq.culturalHeritage.model.Booking;
 import com.univaq.culturalHeritage.model.Tickets;
 import com.univaq.culturalHeritage.repository.BookingRepository;
 import com.univaq.culturalHeritage.repository.TicketRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,15 +29,15 @@ public class BookingController {
     }
 
     @PostMapping("/book")
-    public Booking bookTicket(@RequestBody UserBooking bookingDetail){
+    public ResponseEntity<Booking> bookTicket(@RequestBody UserBooking bookingDetail, HttpServletResponse response){
         Booking booking = new Booking();
         booking.setUserId(bookingDetail.getUserId());
         booking.setQuantity(bookingDetail.getQuantity());
         booking.setDate(bookingDetail.getDate());
-        booking.setTicket(ticketRepository.findById(bookingDetail.getTicketId()).get());
+        booking.setTicket(ticketRepository.findById(bookingDetail.getTicketId()).orElseThrow(()->new NotFoundException("NOT FOUND", "Ticket nOT fOUND")));
         booking.setTime(bookingDetail.getTime());
         booking.setId(bookingDetail.getId());
-        return bookingRepository.save(booking);
+        return new ResponseEntity<>(bookingRepository.save(booking), HttpStatus.OK) ;
     }
 
     @GetMapping("/available-tickets")
@@ -46,22 +51,28 @@ public class BookingController {
     }
 
     @GetMapping("/{userid}")
-    public List<BookingDao> getUserBooking(@PathVariable(value="userid") Long userId){
+    public List<BookingDao> getUserBooking(@PathVariable(value="userid") Long userId, HttpServletResponse response){
         List<BookingDao> userBookinglist = new ArrayList<>();
-        List<Booking> userBooking = bookingRepository.findByUserId(userId);
-        for (Booking booking:
-             userBooking) {
-            BookingDao aBooking = new BookingDao();
-            aBooking.setTotalPrice(booking.getQuantity() * booking.getTicket().getPrice());
-            aBooking.setBookingTime(booking.getTime());
-            aBooking.setBookingDate(booking.getDate());
-            aBooking.setDescription(booking.getTicket().getDescription());
-            aBooking.setQuantity(booking.getQuantity());
-            aBooking.setName(booking.getTicket().getName());
-            //todo check status
-            aBooking.setStatus("ACTIVE");
-            userBookinglist.add(aBooking);
+        try {
+            List<Booking> userBooking = bookingRepository.findByUserId(userId);
+            for (Booking booking :
+                    userBooking) {
+                BookingDao aBooking = new BookingDao();
+                aBooking.setTotalPrice(booking.getQuantity() * booking.getTicket().getPrice());
+                aBooking.setBookingTime(booking.getTime());
+                aBooking.setBookingDate(booking.getDate());
+                aBooking.setDescription(booking.getTicket().getDescription());
+                aBooking.setQuantity(booking.getQuantity());
+                aBooking.setName(booking.getTicket().getName());
+                //todo check status
+                aBooking.setStatus("ACTIVE");
+                userBookinglist.add(aBooking);
+            }
+            return userBookinglist;
+        }catch (NotFoundException ex){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "Foo Not Found", ex);
         }
-        return userBookinglist;
+
     }
 }
