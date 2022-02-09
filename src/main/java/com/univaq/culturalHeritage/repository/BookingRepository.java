@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BookingRepository extends MongoRepository<Booking, Long> {
+public interface BookingRepository extends MongoRepository<Booking, String> {
 
-    List<Booking> findByUserId(long userId);
+    List<Booking> findByUserId(String userId);
 }
 

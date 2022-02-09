@@ -11,11 +11,12 @@ import java.util.Date;
 @Document(collection = "bookings")
 public class Booking {
     @Id
-    private long id;
+    private String id;
     private int quantity;
     private String date;
     private String time;
-    private long userId;
+    private String userId;
     private Tickets ticket;
+    private String status;
 
 }

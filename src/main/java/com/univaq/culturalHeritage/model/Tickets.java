@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "tickets")
 public class Tickets {
     @Id
-    private long id;
+    private String id;
     private String name;
     private Double price;
     private String description;

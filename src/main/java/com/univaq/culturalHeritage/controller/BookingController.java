@@ -14,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -37,6 +36,7 @@ public class BookingController {
         booking.setTicket(ticketRepository.findById(bookingDetail.getTicketId()).orElseThrow(()->new NotFoundException("NOT FOUND", "Ticket nOT fOUND")));
         booking.setTime(bookingDetail.getTime());
         booking.setId(bookingDetail.getId());
+        booking.setStatus("NOT PAID");
         return new ResponseEntity<>(bookingRepository.save(booking), HttpStatus.OK) ;
     }
 
@@ -51,7 +51,7 @@ public class BookingController {
     }
 
     @GetMapping("/{userid}")
-    public List<BookingDao> getUserBooking(@PathVariable(value="userid") Long userId, HttpServletResponse response){
+    public List<BookingDao> getUserBooking(@PathVariable(value="userid") String userId, HttpServletResponse response){
         List<BookingDao> userBookinglist = new ArrayList<>();
         try {
             List<Booking> userBooking = bookingRepository.findByUserId(userId);
