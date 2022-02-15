@@ -23,4 +23,13 @@ public class ApiAdvice extends ResponseEntityExceptionHandler {
     }
 
 
+    @ExceptionHandler(BadRequestException.class)
+    protected ResponseEntity<Object> handleBadRequestException(BadRequestException ex) {
+        ErrorResponse response = new ErrorResponse();
+        response.setResponseCode(ex.getCode());
+        response.setResponseMessage(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
 }

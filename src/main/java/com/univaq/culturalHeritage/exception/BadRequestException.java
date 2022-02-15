@@ -1,0 +1,8 @@
+package com.univaq.culturalHeritage.exception;
+
+public class BadRequestException extends ApplicationException {
+
+    public BadRequestException(String code, String message) {
+        super(code, message);
+    }
+}

@@ -2,6 +2,7 @@ package com.univaq.culturalHeritage.controller;
 
 import com.univaq.culturalHeritage.dao.BookingDao;
 import com.univaq.culturalHeritage.dao.UserBooking;
+import com.univaq.culturalHeritage.exception.BadRequestException;
 import com.univaq.culturalHeritage.exception.NotFoundException;
 import com.univaq.culturalHeritage.model.Booking;
 import com.univaq.culturalHeritage.model.Tickets;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/booking")
@@ -32,6 +35,7 @@ public class BookingController {
         Booking booking = new Booking();
         booking.setUserId(bookingDetail.getUserId());
         booking.setQuantity(bookingDetail.getQuantity());
+        validateDate(bookingDetail.getDate());
         booking.setDate(bookingDetail.getDate());
         booking.setTicket(ticketRepository.findById(bookingDetail.getTicketId()).orElseThrow(()->new NotFoundException("NOT FOUND", "Ticket nOT fOUND")));
         booking.setTime(bookingDetail.getTime());
@@ -64,7 +68,11 @@ public class BookingController {
                 aBooking.setDescription(booking.getTicket().getDescription());
                 aBooking.setQuantity(booking.getQuantity());
                 aBooking.setName(booking.getTicket().getName());
-                aBooking.setStatus(booking.getStatus());
+                if(booking.getStatus().equals("NOT PAID")  && LocalDate.parse(booking.getDate()).isBefore(LocalDate.now())){
+                    aBooking.setStatus("EXPIRED");
+                }else{
+                    aBooking.setStatus(booking.getStatus());
+                }
                 aBooking.setId(booking.getId());
                 userBookinglist.add(aBooking);
             }
@@ -74,5 +82,21 @@ public class BookingController {
                     HttpStatus.NOT_FOUND, "Foo Not Found", ex);
         }
 
+    }
+
+    public String getTicketStatus(Booking booking){
+            if (booking.getStatus() == "UNPAID" && LocalDate.parse(booking.getDate()).isAfter(LocalDate.now())) {
+                return "EXPIRED";
+            } else {
+                return booking.getStatus();
+            }
+    }
+
+    public void validateDate(String givenDate){
+        try{
+            LocalDate.parse(givenDate);
+        }catch (DateTimeParseException e){
+            throw new BadRequestException("BAD_REQUEST", "The date is incorrect");
+        }
     }
 }
