@@ -64,8 +64,8 @@ public class BookingController {
                 aBooking.setDescription(booking.getTicket().getDescription());
                 aBooking.setQuantity(booking.getQuantity());
                 aBooking.setName(booking.getTicket().getName());
-                //todo check status
-                aBooking.setStatus("ACTIVE");
+                aBooking.setStatus(booking.getStatus());
+                aBooking.setId(booking.getId());
                 userBookinglist.add(aBooking);
             }
             return userBookinglist;
