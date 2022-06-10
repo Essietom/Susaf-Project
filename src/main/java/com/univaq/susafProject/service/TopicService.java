@@ -21,7 +21,6 @@ public class TopicService {
     public Topic saveOrUpdateTopic(Topic topic)
     {
         //Topic oldTopic = topicRepository.findById(topicId).orElseThrow(() -> new NotFoundException("", ""));
-
         return topicRepository.save(topic);
     }
 

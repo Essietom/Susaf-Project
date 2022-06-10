@@ -38,6 +38,9 @@ public class QuestionService {
     {
         Topic topic  = topicRepository.findById(topicId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The topic does not exist"));
         ArrayList<Question> updatedQuestions = topic.getQuestion();
+        if(updatedQuestions == null){
+            updatedQuestions = new ArrayList<Question>();
+        }
         updatedQuestions.add(question);
         topic.setQuestion(updatedQuestions);
         topicRepository.save(topic);
