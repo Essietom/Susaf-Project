@@ -23,7 +23,7 @@ public class QuestionController {
     @CrossOrigin
     @PostMapping("/add")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Question> addQuestion(@RequestBody Question question, @PathVariable(value="topicId") String topicId){
+    public ResponseEntity<Question> addQuestion(@RequestBody Question question, @RequestParam(value="topicId") String topicId){
         return new ResponseEntity<>(questionService.saveOrUpdateQuestion(question, topicId), HttpStatus.OK) ;
     }
 
