@@ -64,9 +64,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .encode("admin")).roles("ADMIN").build();
 //        return new InMemoryUserDetailsManager(ramesh, admin);
 //    }
-
-
-
 }
 
 
