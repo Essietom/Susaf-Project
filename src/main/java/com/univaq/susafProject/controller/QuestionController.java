@@ -30,7 +30,7 @@ public class QuestionController {
     @CrossOrigin
     @GetMapping("/get")
    // @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-    public ResponseEntity<List<Question>> getQuestion(@PathVariable(value="dimensionId") String dimensionId, HttpServletResponse response){
+    public ResponseEntity<List<Question>> getQuestion(@RequestParam String dimensionId, HttpServletResponse response){
         return new ResponseEntity<>(questionService.getQuestionsByDimensionId(dimensionId), HttpStatus.OK) ;
     }
 
@@ -44,14 +44,14 @@ public class QuestionController {
     @CrossOrigin
     @PutMapping("/edit")
     // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Question> editQuestion(@RequestBody Question question, String questionId, HttpServletResponse response){
+    public ResponseEntity<Question> editQuestion(@RequestParam Question question, String questionId, HttpServletResponse response){
         return new ResponseEntity<>(questionService.updateQuestion(question, questionId), HttpStatus.OK) ;
     }
 
     @CrossOrigin
     @DeleteMapping("/delete")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteDimension(@PathVariable String questionId, HttpServletResponse response){
+    public void deleteDimension(@RequestParam String questionId, HttpServletResponse response){
         questionService.delete(questionId);
     }
 

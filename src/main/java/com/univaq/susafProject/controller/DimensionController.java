@@ -38,14 +38,14 @@ public class DimensionController {
     @CrossOrigin
     @PutMapping("/edit")
    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Dimension> editDimension(@RequestBody Dimension dimension, String dimensionId, HttpServletResponse response){
+    public ResponseEntity<Dimension> editDimension(@RequestBody Dimension dimension, @RequestParam String dimensionId, HttpServletResponse response){
         return new ResponseEntity<>(dimensionService.updateDimension(dimension, dimensionId), HttpStatus.OK) ;
     }
 
     @CrossOrigin
     @DeleteMapping("/delete")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteDimension(@PathVariable String dimensionId, HttpServletResponse response){
+    public void deleteDimension(@RequestParam String dimensionId, HttpServletResponse response){
         dimensionService.deleteDimension(dimensionId);
     }
 

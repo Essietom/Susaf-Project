@@ -37,14 +37,14 @@ public class TopicController {
     @CrossOrigin
     @PutMapping("/edit")
   //  @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Topic> editTopic(@RequestBody Topic topic,@PathVariable String topicId, HttpServletResponse response){
+    public ResponseEntity<Topic> editTopic(@RequestBody Topic topic,@RequestParam String topicId, HttpServletResponse response){
         return new ResponseEntity<>(topicService.updateTopic(topic, topicId), HttpStatus.OK) ;
     }
 
     @CrossOrigin
     @DeleteMapping("/delete")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteTopic(@PathVariable String topicId, HttpServletResponse response){
+    public void deleteTopic(@RequestParam String topicId, HttpServletResponse response){
         topicService.deleteTopic(topicId);
     }
 
