@@ -5,10 +5,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collection = "questions")
+//@Document(collection = "questions")
 public class Question {
     @Id
     private String id;
-    private Dimension dimension;
+//    private Dimension dimension;
     private String description;
 }

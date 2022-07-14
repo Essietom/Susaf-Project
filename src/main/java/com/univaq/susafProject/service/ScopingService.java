@@ -1,12 +1,9 @@
 package com.univaq.susafProject.service;
 
-import com.univaq.susafProject.model.Dimension;
 import com.univaq.susafProject.model.Scoping;
-import com.univaq.susafProject.repository.DimensionRepository;
 import com.univaq.susafProject.repository.ScopingRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,6 +23,7 @@ public class ScopingService {
 
     public List<Scoping> getScopingByUser()
     {
+
        return null;
 //       return scopingRepository.findByUserId();
     }

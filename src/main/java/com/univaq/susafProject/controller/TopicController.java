@@ -23,29 +23,29 @@ public class TopicController {
     @CrossOrigin
     @PostMapping("/add")
    // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Topic> addTopic(@RequestBody Topic topic, HttpServletResponse response){
-        return new ResponseEntity<>(topicService.saveOrUpdateTopic(topic), HttpStatus.OK) ;
+    public ResponseEntity<Topic> addTopic(@RequestBody Topic topic, @RequestParam String dimensionId, HttpServletResponse response){
+        return new ResponseEntity<>(topicService.saveOrUpdateTopic(topic, dimensionId), HttpStatus.OK) ;
     }
 
     @CrossOrigin
     @GetMapping("/all")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Topic>> getTopic(HttpServletResponse response){
-        return new ResponseEntity<>(topicService.getAllTopic(), HttpStatus.OK) ;
+    public ResponseEntity<List<Topic>> getTopic(@RequestParam String dimensionId){
+        return new ResponseEntity<>(topicService.getAllTopic(dimensionId), HttpStatus.OK) ;
     }
 
     @CrossOrigin
     @PutMapping("/edit")
   //  @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Topic> editTopic(@RequestBody Topic topic,@RequestParam String topicId, HttpServletResponse response){
-        return new ResponseEntity<>(topicService.updateTopic(topic, topicId), HttpStatus.OK) ;
+    public ResponseEntity<Topic> editTopic(@RequestBody Topic topic,@RequestParam String topicId, String dimensionId, HttpServletResponse response){
+        return new ResponseEntity<>(topicService.updateTopic(topic, topicId, dimensionId), HttpStatus.OK) ;
     }
 
     @CrossOrigin
     @DeleteMapping("/delete")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteTopic(@RequestParam String topicId, HttpServletResponse response){
-        topicService.deleteTopic(topicId);
+    public void deleteTopic(@RequestParam String topicId,String dimensionId, HttpServletResponse response){
+        topicService.deleteTopic(topicId, dimensionId);
     }
 
 }

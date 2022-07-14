@@ -3,7 +3,6 @@ package com.univaq.susafProject.service;
 
 import com.univaq.susafProject.exception.NotFoundException;
 import com.univaq.susafProject.model.Dimension;
-import com.univaq.susafProject.model.Topic;
 import com.univaq.susafProject.repository.DimensionRepository;
 import org.springframework.stereotype.Service;
 

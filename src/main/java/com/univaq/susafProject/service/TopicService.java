@@ -1,10 +1,9 @@
 package com.univaq.susafProject.service;
 
 import com.univaq.susafProject.exception.NotFoundException;
-import com.univaq.susafProject.model.Question;
+import com.univaq.susafProject.model.Dimension;
 import com.univaq.susafProject.model.Topic;
-import com.univaq.susafProject.repository.TopicRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.univaq.susafProject.repository.DimensionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,48 +11,64 @@ import java.util.List;
 
 @Service
 public class TopicService {
-    TopicRepository topicRepository;
+    DimensionRepository dimensionRepository;
 
-    public TopicService(TopicRepository topicRepository) {
-        this.topicRepository = topicRepository;
+    public TopicService(DimensionRepository dimensionRepository) {
+        dimensionRepository = dimensionRepository;
     }
 
-    public Topic saveOrUpdateTopic(Topic topic)
+    public Topic saveOrUpdateTopic(Topic topic, String dimensionId)
     {
-        //Topic oldTopic = topicRepository.findById(topicId).orElseThrow(() -> new NotFoundException("", ""));
-        return topicRepository.save(topic);
-    }
-
-    public Topic updateTopic(Topic topic, String topicId)
-    {
-        Topic oldTopic = topicRepository.findById(topicId).orElseThrow(() -> new NotFoundException("NOT_FOUND", "Topic Not Found"));
-
-        if(topic.getDescription() != null){
-            oldTopic.setDescription(topic.getDescription());
+        Dimension dimension  = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The dimension does not exist"));
+        List<Topic> updatedTopics = dimension.getTopic();
+        if(updatedTopics == null){
+            updatedTopics = new ArrayList<Topic>();
         }
-        if(topic.getName() != null){
-            oldTopic.setName(topic.getName());
-        }
-        return topicRepository.save(oldTopic);
+        updatedTopics.add(topic);
+        dimension.setTopic(updatedTopics);
+        dimensionRepository.save(dimension);
+        return topic;
     }
 
-    public List<Topic> getAllTopic()
+    public Topic updateTopic(Topic topic, String topicId, String dimensionId)
     {
-        List<Topic> topics = new ArrayList<Topic>();
-        topicRepository.findAll().forEach(topic1 -> topics.add(topic1));
+
+//        Dimension oldDimension = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT_FOUND", "Dimension not found"));
+//        List<Topic> oldTopics = oldDimension.getTopic();
+//
+//
+//        List<Topic> updatedTopics = oldTopics.stream()
+//                .filter(t -> t.getId().equals(topicId))
+//                .findFirst()
+//                .map(o -> o.getDescription() == topic.getDescription() ? topic.getDescription() : o)
+//                ;
+//
+//        oldDimension.setTopic(updatedTopics);
+//         dimensionRepository.save(oldDimension);
+//        return topic;
+        return null;
+
+    }
+
+    public List<Topic> getAllTopic(String dimensionId)
+    {
+        Dimension dimension  = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The dimension does not exist"));
+        List<Topic> topics = dimension.getTopic();
         return topics;
     }
 
-    public void deleteTopic(String topicId)
+    public void deleteTopic(String topicId, String dimensionId)
     {
-        Topic topic = topicRepository.findById(topicId).orElseThrow(() -> new NotFoundException("NOT_FOUND", "Topic not found"));
-        topicRepository.delete(topic);
+        Dimension dimension  = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The dimension does not exist"));
+        List<Topic> topics = dimension.getTopic();
+        //iterate through topics, remove topic with given id and update dimension
     }
 
-    public Topic getTopicById(String topicId)
-    {
-        return topicRepository.findById(topicId).orElseThrow(() -> new NotFoundException("NOT_FOUND", "Topic not found"));
+    public Topic getTopicById(String topicId, String dimensionId) {
+        Dimension dimension = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The dimension does not exist"));
+        List<Topic> updatedTopics = dimension.getTopic();
+        //return topic with the given id
+        return null;
     }
-
 
 }

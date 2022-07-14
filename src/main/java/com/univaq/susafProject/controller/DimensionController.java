@@ -1,14 +1,11 @@
 package com.univaq.susafProject.controller;
 
 import com.univaq.susafProject.model.Dimension;
-import com.univaq.susafProject.model.Topic;
 import com.univaq.susafProject.service.DimensionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
