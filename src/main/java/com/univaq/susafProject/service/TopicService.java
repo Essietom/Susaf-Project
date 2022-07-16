@@ -35,20 +35,22 @@ public class TopicService {
     public Topic updateTopic(Topic topic, String topicId, String dimensionId)
     {
 
-//        Dimension oldDimension = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT_FOUND", "Dimension not found"));
-//        List<Topic> oldTopics = oldDimension.getTopic();
-//
-//
-//        List<Topic> updatedTopics = oldTopics.stream()
-//                .filter(t -> t.getId().equals(topicId))
-//                .findFirst()
-//                .map(o -> o.getDescription() == topic.getDescription() ? topic.getDescription() : o)
-//                ;
-//
-//        oldDimension.setTopic(updatedTopics);
-//         dimensionRepository.save(oldDimension);
-//        return topic;
-        return null;
+        Dimension oldDimension = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT_FOUND", "Dimension not found"));
+        List<Topic> oldTopics = oldDimension.getTopic();
+        if(oldTopics == null) throw new NotFoundException("NOT FOUND", "The topic does not exist");
+        Topic oldTopic = oldTopics.stream()
+                .filter(t -> t.getId().equals(topicId))
+                .findFirst()
+                .orElseThrow(()-> new NotFoundException("NOT FOUND", "The topic does not exist"))
+                ;
+        if(topic.getDescription() != null){
+            oldTopic.setDescription(topic.getDescription());
+        }
+        if(topic.getName() != null){
+            oldTopic.setName(topic.getName());
+        }
+         dimensionRepository.save(oldDimension);
+        return oldTopic;
 
     }
 
@@ -72,11 +74,12 @@ public class TopicService {
     public Topic getTopicById(String topicId, String dimensionId) {
         Dimension dimension = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The dimension does not exist"));
         List<Topic> topics = dimension.getTopic();
-                Topic topic = topics.stream()
-                .filter(t -> t.getId().equals(topicId))
-                .findFirst()
-                        .orElseThrow(()-> new NotFoundException("NOT FOUND", "The topic does not exist"))
-                ;
+        if(topics == null) throw new NotFoundException("NOT FOUND", "The topic does not exist");
+        Topic topic = topics.stream()
+        .filter(t -> t.getId().equals(topicId))
+        .findFirst()
+                .orElseThrow(()-> new NotFoundException("NOT FOUND", "The topic does not exist"))
+        ;
         return topic;
     }
 

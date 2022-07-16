@@ -46,7 +46,6 @@ public class DimensionService {
 
     public void deleteDimension(String dimensionId)
     {
-        Dimension dimension = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT_FOUND", "Dimension not found"));
         dimensionRepository.deleteById(dimensionId);
     }
 

@@ -42,8 +42,8 @@ public class QuestionController {
     @CrossOrigin
     @PutMapping("/edit")
     // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Question> editQuestion(@RequestParam Question question, @RequestParam String dimensionId, @RequestParam String topicId, HttpServletResponse response){
-        return new ResponseEntity<>(questionService.updateQuestion(question, topicId, dimensionId), HttpStatus.OK) ;
+    public ResponseEntity<Question> editQuestion(@RequestBody Question question, @RequestParam String dimensionId, @RequestParam String topicId, @RequestParam String questionId){
+        return new ResponseEntity<>(questionService.updateQuestion(question, topicId, dimensionId, questionId), HttpStatus.OK) ;
     }
 
     @CrossOrigin
