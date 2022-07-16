@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class QuestionService {
@@ -18,25 +19,48 @@ public class QuestionService {
         this.dimensionRepository = dimensionRepository;
     }
 
-    public List<Question> getAllQuestions(String dimensionId, String topicId)
+    public List<Question> getAllQuestions(String topicId, String dimensionId)
     {
         Dimension dimension  = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The dimension does not exist"));
-        List<Topic> topic = dimension.getTopic();
-        //iterate and return all questions with given topic id
-        return null;
-    }
-    public Question getQuestionById(String dimension, String topicId, String questionId)
-    {
+        List<Topic> topics = dimension.getTopic();
+        List<Question> questions = topics.stream()
+                .filter(t -> t.getId().equals(topicId))
+                .findFirst()
+                .orElseThrow(()-> new NotFoundException("NOT FOUND", "The topic does not exist"))
+                .getQuestion();
 
-        return null;
+        return questions;
+    }
+    public Question getQuestionById(String dimensionId, String topicId, String questionId)
+    {
+        List<Question> questions = getAllQuestions(topicId, dimensionId);
+        if(questions == null){
+            questions = new ArrayList<Question>();
+        }
+        Question question = questions.stream().filter(q -> q.getId().equals(questionId))
+                .findFirst()
+                .orElseThrow(()-> new NotFoundException("NOT FOUND", "The question does not exist"))
+        ;
+        return question;
     }
 
     public Question saveOrUpdateQuestion(Question question, String topicId, String dimensionId)
     {
         Dimension dimension  = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The dimension does not exist"));
-        List<Topic> topic = dimension.getTopic();
-        //iterate and get topic with given topic id, add question to it and update dimension
-        return null;
+        List<Topic> topics = dimension.getTopic();
+
+        Topic topic = topics.stream()
+                .filter(t -> t.getId().equals(topicId))
+                .findFirst()
+                .orElseThrow(()-> new NotFoundException("NOT FOUND", "The topic does not exist"))
+                ;
+        if(topic.getQuestion() == null){
+            topic.setQuestion(new ArrayList<Question>());
+        }
+        topic.getQuestion().add(question);
+        question.setId(String.valueOf(UUID.randomUUID()));
+        dimensionRepository.save(dimension);
+        return question;
     }
 
     public Question updateQuestion(Question  question, String topicId, String dimensionId )
@@ -48,5 +72,18 @@ public class QuestionService {
 
     public void delete(String questionId, String dimensionId, String topicId)
     {
+        Dimension dimension  = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The dimension does not exist"));
+        List<Topic> topics = dimension.getTopic();
+
+        List<Question> questions = topics.stream()
+                .filter(t -> t.getId().equals(topicId))
+                .findFirst()
+                .orElseThrow(()-> new NotFoundException("NOT FOUND", "The topic does not exist"))
+                .getQuestion();
+        questions.removeIf(
+                q -> q.getId().equals(questionId)
+        );
+        dimensionRepository.save(dimension);
+
     }
 }

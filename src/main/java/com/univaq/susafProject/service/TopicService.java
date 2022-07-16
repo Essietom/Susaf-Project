@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TopicService {
     DimensionRepository dimensionRepository;
 
     public TopicService(DimensionRepository dimensionRepository) {
-        dimensionRepository = dimensionRepository;
+        this.dimensionRepository = dimensionRepository;
     }
 
     public Topic saveOrUpdateTopic(Topic topic, String dimensionId)
@@ -24,6 +25,7 @@ public class TopicService {
         if(updatedTopics == null){
             updatedTopics = new ArrayList<Topic>();
         }
+        topic.setId(String.valueOf(UUID.randomUUID()));
         updatedTopics.add(topic);
         dimension.setTopic(updatedTopics);
         dimensionRepository.save(dimension);
@@ -61,14 +63,21 @@ public class TopicService {
     {
         Dimension dimension  = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The dimension does not exist"));
         List<Topic> topics = dimension.getTopic();
-        //iterate through topics, remove topic with given id and update dimension
+        topics.removeIf(
+                t -> t.getId().equals(topicId)
+        );
+        dimensionRepository.save(dimension);
     }
 
     public Topic getTopicById(String topicId, String dimensionId) {
         Dimension dimension = dimensionRepository.findById(dimensionId).orElseThrow(() -> new NotFoundException("NOT FOUND", "The dimension does not exist"));
-        List<Topic> updatedTopics = dimension.getTopic();
-        //return topic with the given id
-        return null;
+        List<Topic> topics = dimension.getTopic();
+                Topic topic = topics.stream()
+                .filter(t -> t.getId().equals(topicId))
+                .findFirst()
+                        .orElseThrow(()-> new NotFoundException("NOT FOUND", "The topic does not exist"))
+                ;
+        return topic;
     }
 
 }
