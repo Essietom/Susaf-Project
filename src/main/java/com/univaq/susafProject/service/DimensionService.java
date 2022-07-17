@@ -1,6 +1,7 @@
 package com.univaq.susafProject.service;
 
 
+import com.univaq.susafProject.exception.DuplicateException;
 import com.univaq.susafProject.exception.NotFoundException;
 import com.univaq.susafProject.model.Dimension;
 import com.univaq.susafProject.repository.DimensionRepository;
@@ -28,7 +29,11 @@ public class DimensionService {
 
         public Dimension saveOrUpdateDimension(Dimension dimension )
     {
-        return dimensionRepository.save(dimension);
+        try {
+            return dimensionRepository.save(dimension);
+        }catch(org.springframework.dao.DuplicateKeyException e){
+            throw new DuplicateException("DUPLICATE KEY", "There's a dimension with the same name already");
+        }
     }
 
     public Dimension updateDimension(Dimension dimension, String dimensionId )
