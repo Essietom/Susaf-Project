@@ -1,15 +1,10 @@
 package com.univaq.susafProject.controller;
 
-import com.univaq.susafProject.model.Dimension;
 import com.univaq.susafProject.model.Synthesis;
-import com.univaq.susafProject.service.DimensionService;
 import com.univaq.susafProject.service.SynthesisService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/susaf/synthesis")
@@ -23,14 +18,14 @@ public class SynthesisController {
     @CrossOrigin
     @PostMapping("/add")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Synthesis> addSynthesis(@RequestBody Synthesis synthesis, HttpServletResponse response){
+    public ResponseEntity<Synthesis> addSynthesis(@RequestBody Synthesis synthesis){
         return new ResponseEntity<>(synthesisService.saveSynthesis(synthesis), HttpStatus.OK) ;
     }
 
     @CrossOrigin
-    @GetMapping("/all")
+    @GetMapping("/get")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<Synthesis>> getSynthesis(HttpServletResponse response){
-        return new ResponseEntity<>(synthesisService.getSytnthesisByUser(), HttpStatus.OK) ;
+    public ResponseEntity<Synthesis> getSynthesisByScopingId(@RequestParam String scopingId){
+        return new ResponseEntity<>(synthesisService.getSynthesisByScopingId(scopingId), HttpStatus.OK) ;
     }
 }

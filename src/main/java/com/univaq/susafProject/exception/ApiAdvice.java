@@ -1,5 +1,6 @@
 package com.univaq.susafProject.exception;
 
+import com.mongodb.DuplicateKeyException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -30,5 +31,12 @@ public class ApiAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DuplicateException.class)
+    protected ResponseEntity<Object> handleDuplicateException(DuplicateException ex) {
+        ErrorResponse response = new ErrorResponse();
+        response.setResponseCode(ex.getCode());
+        response.setResponseMessage(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 
 }

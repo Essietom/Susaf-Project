@@ -1,5 +1,6 @@
 package com.univaq.susafProject.service;
 
+import com.univaq.susafProject.exception.NotFoundException;
 import com.univaq.susafProject.model.Scoping;
 import com.univaq.susafProject.repository.ScopingRepository;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,10 @@ public class ScopingService {
         this.scopingRepository = scopingRepository;
     }
 
-    public Scoping getScopingByIdAndUser()
+    public Scoping getScopingById(String scopingId)
     {
-       return null;
-//       return scopingRepository.findByIdAndUserId();
+       return scopingRepository.findById(scopingId)
+               .orElseThrow(() -> new NotFoundException("NOT FOUND", "The scoping does not exist"));
     }
 
     public List<Scoping> getScopingByUser()

@@ -1,8 +1,9 @@
 package com.univaq.susafProject.service;
 
-import com.univaq.susafProject.model.Scoping;
+import com.mongodb.DuplicateKeyException;
+import com.univaq.susafProject.exception.DuplicateException;
+import com.univaq.susafProject.exception.NotFoundException;
 import com.univaq.susafProject.model.Synthesis;
-import com.univaq.susafProject.repository.ScopingRepository;
 import com.univaq.susafProject.repository.SynthesisRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,21 +18,24 @@ public class SynthesisService {
         this.synthesisRepository = synthesisRepository;
     }
 
-    public Synthesis getSynthesisByIdAndUser()
+    public Synthesis getSynthesisByScopingId(String scopingId)
     {
-        return null;
-//        return synthesisRepository.findByIdAndUserId();
+        return synthesisRepository.findByScopingId(scopingId);
     }
 
     public List<Synthesis> getSytnthesisByUser()
     {
         return null;
-//        return scopingRepository.findByUserId();
     }
 
     public Synthesis saveSynthesis(Synthesis synthesis )
     {
-        return synthesisRepository.save(synthesis);
+        try{
+            return synthesisRepository.save(synthesis);
+        }catch(org.springframework.dao.DuplicateKeyException e){
+           throw new DuplicateException("DUPLICATE KEY", "There's a synthesis for that scoping id already");
+    }
+
     }
 
 }

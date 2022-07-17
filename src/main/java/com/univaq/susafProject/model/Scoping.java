@@ -11,7 +11,7 @@ import java.util.List;
 public class Scoping {
     @Id
     private String id;
-    private User user;
+    //private User user;
     private String productName;
     private String productVision;
     private List<String> knownSustainabilityEffects;
