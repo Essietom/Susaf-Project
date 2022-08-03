@@ -37,4 +37,11 @@ public class ScopingController {
     public ResponseEntity<Scoping> getScopingById(@RequestParam String scopingId){
         return new ResponseEntity<>(scopingService.getScopingById(scopingId), HttpStatus.OK) ;
     }
+
+    @CrossOrigin
+    @GetMapping("/get/all")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<Scoping>> getScopings(){
+        return new ResponseEntity<>(scopingService.getAllScoping(), HttpStatus.OK) ;
+    }
 }
